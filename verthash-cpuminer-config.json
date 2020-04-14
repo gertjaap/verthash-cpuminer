@@ -1,0 +1,7 @@
+{
+    "rpcHost" : "localhost:15888",
+    "rpcUser" : "vertcoin",
+    "rpcPassword" : "vertcoin",
+    "payRewardsTo" : "2N3h6eCbEkiVh2bR8ygTy9qYbgYdAtteEYu",
+    "verthashDatFile" : "/home/gertjaap/.verthash/testnet3/verthash.dat"
+}
