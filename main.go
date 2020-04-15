@@ -21,6 +21,8 @@ import (
 	"github.com/gertjaap/verthash-cpuminer/verthash"
 )
 
+var submitBlockLock = sync.Mutex{}
+
 func main() {
 
 	cfg, err := config.GetConfig()
@@ -141,11 +143,19 @@ func main() {
 							if err != nil {
 								fmt.Printf("\n\nBlock rejected: %s\n\n", err.Error())
 							} else {
-								fmt.Printf("\nBlock %d accepted!\n", height)
-								for i := 0; i < runtime.NumCPU(); i++ {
-									terminate <- true
+								submitBlockLock.Lock()
+								select {
+								case <-terminate:
+									mining = false
+								default:
+									fmt.Printf("\nBlock %d accepted!\n", height)
+									for i := 0; i < runtime.NumCPU(); i++ {
+										terminate <- true
+									}
+									mining = false
 								}
-								mining = false
+
+								submitBlockLock.Unlock()
 								break
 							}
 						}
